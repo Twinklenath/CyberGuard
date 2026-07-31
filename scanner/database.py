@@ -1,9 +1,12 @@
 import sqlite3
 
 
+DATABASE = "scans.db"
+
+
 def create_database():
 
-    conn = sqlite3.connect("database/scans.db")
+    conn = sqlite3.connect(DATABASE)
 
     cursor = conn.cursor()
 
@@ -22,44 +25,36 @@ def create_database():
     """)
 
     conn.commit()
-
     conn.close()
+
 
 def save_scan(website, score):
 
-    conn = sqlite3.connect("database/scans.db")
+    conn = sqlite3.connect(DATABASE)
 
     cursor = conn.cursor()
 
     cursor.execute(
-
-        "INSERT INTO scans(website,score) VALUES(?,?)",
-
+        "INSERT INTO scans(website, score) VALUES(?, ?)",
         (website, score)
-
     )
 
     conn.commit()
-
     conn.close()
 
 
 def get_history():
 
-    conn = sqlite3.connect("database/scans.db")
+    conn = sqlite3.connect(DATABASE)
 
     cursor = conn.cursor()
 
     cursor.execute("""
-
         SELECT website,
                score,
                scan_date
-
         FROM scans
-
         ORDER BY id DESC
-
     """)
 
     history = cursor.fetchall()
