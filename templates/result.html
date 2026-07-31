@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>CyberGuard Report</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🛡 CyberGuard Security Dashboard</h1>
+
+<div class="dashboard-grid">
+
+<div class="card">
+
+<h3>🌐 Website</h3>
+
+<div class="value">
+
+{{ website }}
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Status</h3>
+
+<div class="value">
+
+{% if result.reachable %}
+
+<span class="success">🟢 Reachable</span>
+
+{% else %}
+
+<span class="danger">🔴 Unreachable</span>
+
+{% endif %}
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>HTTP Status</h3>
+
+<div class="value">
+
+{{ result.status_code }}
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>HTTPS</h3>
+
+<div class="value">
+
+{% if https_result %}
+
+<span class="success">Enabled</span>
+
+{% else %}
+
+<span class="danger">Disabled</span>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+<div class="card">
+
+<h2>📋 Security Summary</h2>
+
+<ul class="header-list">
+
+{% for item in summary %}
+
+<li>
+
+{{ item }}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+<div class="score-box">
+
+<h2>📊 Security Score</h2>
+
+<h1>{{ score }}/100</h1>
+
+<div class="progress">
+
+<div class="progress-bar"
+
+style="width:{{ score }}%;">
+
+</div>
+
+</div>
+
+{% if score>=80 %}
+
+<h2 class="success">LOW RISK</h2>
+
+{% elif score>=50 %}
+
+<h2 class="warning">MEDIUM RISK</h2>
+
+{% else %}
+
+<h2 class="danger">HIGH RISK</h2>
+
+{% endif %}
+
+</div>
+
+<div class="card" style="margin-top:30px;">
+
+<h2>🛡 Security Headers</h2>
+
+<ul class="header-list">
+
+{% for header,status in headers.items() %}
+
+<li>
+
+{% if status %}
+
+<span class="success">✔</span>
+
+{% else %}
+
+<span class="danger">✖</span>
+
+{% endif %}
+
+{{ header }}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+<hr style="margin:40px 0;">
+
+<div class="card">
+
+<h2>🔒 SSL Certificate</h2>
+
+{% if ssl.valid %}
+
+<p><strong>Status:</strong> <span class="success">Valid</span></p>
+
+<p><strong>Issuer:</strong> {{ ssl.issuer }}</p>
+
+<p><strong>Expiry Date:</strong> {{ ssl.expiry }}</p>
+
+<p><strong>Days Remaining:</strong> {{ ssl.days_left }}</p>
+<div class="card" style="margin-top:30px;">
+
+    <h2>🖥 Server Information</h2>
+
+    <p><strong>Web Server:</strong> {{ server.server }}</p>
+
+</div>
+{% else %}
+
+<p class="danger">SSL Certificate Not Found</p>
+
+{% endif %}
+
+</div>
+<hr style="margin:40px 0;">
+
+<div class="card">
+
+<h2>🍪 Cookie Security</h2>
+
+{% if cookies %}
+
+<table style="width:100%; border-collapse:collapse;">
+
+<tr>
+<th align="left">Cookie</th>
+<th>Secure</th>
+<th>HttpOnly</th>
+</tr>
+
+{% for cookie in cookies %}
+
+<tr>
+
+<td>{{ cookie.name }}</td>
+
+<td>
+
+{% if cookie.secure %}
+
+<span class="success">✔</span>
+
+{% else %}
+
+<span class="danger">✖</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{% if cookie.httponly %}
+
+<span class="success">✔</span>
+
+{% else %}
+
+<span class="danger">✖</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<p>No cookies found.</p>
+
+{% endif %}
+
+</div>
+<a href="/">
+
+<button>
+
+Scan Another Website
+
+</button>
+
+</a>
+
+</div>
+
+<br><br>
+
+<a href="/history">
+
+<button>
+
+View Scan History
+
+</button>
+
+</a>
+
+</body>
+
+</html>
